@@ -10,9 +10,11 @@ const COLORS = [
   "blue",
   "green",
   "orange",
-  "purple"
+  "purple",
 ];
 
+let activeTile = null;
+let waitEndMove = false
 // here is a helper function to shuffle an array
 // it returns the same array with values shuffled
 // it is based on an algorithm called Fisher Yates if you want ot research more
@@ -36,8 +38,6 @@ function shuffle(array) {
   return array;
 }
 
-
-
 let shuffledColors = shuffle(COLORS);
 
 // this function loops over the array of colors
@@ -47,14 +47,25 @@ function createDivsForColors(colorArray) {
   for (let color of colorArray) {
     // create a new div
     let newDiv = document.createElement("div");
-    
-    newDiv.addEventListener("click", () => {
-      
-      
 
-      newDiv.style.backgroundColor = color
-    })
-     
+    newDiv.addEventListener("click", () => {
+      if (waitEndMove) {
+        return
+      }
+
+      newDiv.style.backgroundColor = color;
+      if (!activeTile) {
+        activeTile = newDiv;
+        return
+      }
+      //Waiting for second click.Active card must match second click
+      waitEndMove =true
+      setTimeout(() => {
+        // resetting if clicked not matching card
+        newDiv.style.backgroundColor = null
+        activeTile.style.backgroundColor = null
+      }, 1000)
+    });
 
     // give it a class attribute for the value we are looping over
     newDiv.classList.add(color);
@@ -71,19 +82,7 @@ function createDivsForColors(colorArray) {
 function handleCardClick(event) {
   // you can use event.target to see which element was clicked
   console.log("you just clicked", event.target);
-
 }
-
 
 // when the DOM loads
 createDivsForColors(shuffledColors);
-
-
-
-  
-
-
-
-
-  
-
