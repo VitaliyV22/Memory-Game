@@ -9,7 +9,7 @@ const tileCount = doubleList.length;
 let revealedList = 0;
 let activeTile = null;
 let waitEndMove = false;
-let scoreCount = 0
+let scoreCount = 0;
 
 function createDivsForColors(color) {
   const newDiv = document.createElement("div");
@@ -17,10 +17,11 @@ function createDivsForColors(color) {
   newDiv.classList.add("tile");
   //record data when clicked on
   newDiv.setAttribute("data-color", color);
-  
+  newDiv.setAttribute("data-revealed", "false");
 
   newDiv.addEventListener("click", () => {
-    if (waitEndMove) {
+    const revealed = newDiv.getAttribute("data-revelead");
+    if (waitEndMove || revealed === "true" || newDiv === activeTile) {
       return;
     }
 
@@ -32,20 +33,21 @@ function createDivsForColors(color) {
       return;
     }
 
-    const colorMatch = activeTile.getAttribute("data-color")
+    const colorMatch = activeTile.getAttribute("data-color");
 
-    if (colorMatch === color){
-        activeTile = null
-        waitEndMove =false
-        scoreCount += 2
+    if (colorMatch === color) {
+      activeTile.setAttribute("data-revealed", "true");
+      newDiv.setAttribute("data-revealed", "true");
+      activeTile = null;
+      waitEndMove = false;
+      scoreCount += 2;
 
-        if(scoreCount === tileCount){
-            alert("YOU WIN :)")
-        }
+      if (scoreCount === tileCount) {
+        alert("YOU WIN :)");
+      }
 
-        return
+      return;
     }
-
 
     //Waiting for second click.Active card must match second click
     waitEndMove = true;
@@ -55,10 +57,9 @@ function createDivsForColors(color) {
       newDiv.style.backgroundColor = null;
       activeTile.style.backgroundColor = null;
 
-      waitEndMove = false
-      activeTile = null
+      waitEndMove = false;
+      activeTile = null;
     }, 1000);
-
   });
 
   return newDiv;
