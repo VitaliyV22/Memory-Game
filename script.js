@@ -9,6 +9,7 @@ const tileCount = doubleList.length;
 let revealedList = 0;
 let activeTile = null;
 let waitEndMove = false;
+let scoreCount = 0
 
 function createDivsForColors(color) {
   const newDiv = document.createElement("div");
@@ -16,7 +17,7 @@ function createDivsForColors(color) {
   newDiv.classList.add("tile");
   //record data when clicked on
   newDiv.setAttribute("data-color", color);
-  newDiv.setAttribute("data-revealed", "false");
+  
 
   newDiv.addEventListener("click", () => {
     if (waitEndMove) {
@@ -30,6 +31,21 @@ function createDivsForColors(color) {
 
       return;
     }
+
+    const colorMatch = activeTile.getAttribute("data-color")
+
+    if (colorMatch === color){
+        activeTile = null
+        waitEndMove =false
+        scoreCount += 2
+
+        if(scoreCount === tileCount){
+            alert("YOU WIN :)")
+        }
+
+        return
+    }
+
 
     //Waiting for second click.Active card must match second click
     waitEndMove = true;
